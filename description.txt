@@ -1,0 +1,8 @@
+Detta är uppgift 4.13 ur kursboken, att implementera TreeSet med hjälp av ett binärt 
+sökträd. För ett VG ska koden vara bra skriven, och alla delar som boken ber om ska 
+vara implementerade.
+
+Write an implementation of the TreeSet class, with associated iterators, using a
+binary search tree. Add to each node a link to the next smallest and next largest
+node. To make your code simpler, add a header and tail node which are not part of
+the binary search tree, but help make the linked list part of the code simpler.
