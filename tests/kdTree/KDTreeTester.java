@@ -19,6 +19,7 @@ public class KDTreeTester {
 		Integer[] keys = {4, 5, 6};
 		triDTree.insert( keys, "A");
 		assertTrue( triDTree.contains(keys) );
+		assertEquals("A", triDTree.get(keys) );
 	}
-
+	
 }

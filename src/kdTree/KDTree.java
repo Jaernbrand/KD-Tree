@@ -17,6 +17,63 @@ public class KDTree<T> {
 		DIMENSIONS = dimensions;
 	}
 	
+	private boolean isSameKeys(Comparable[] lhs, Comparable[] rhs){
+		for (int i=0; i < lhs.length; ++i){
+			if (lhs[i].compareTo(rhs) != 0){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public T get(Comparable[] keys){
+		T retValue = null;
+		
+		Stack<Node<T>> travelStack = new Stack<Node<T>>();
+		Stack<Integer> dimensionStack = new Stack<Integer>();
+		
+		int currDimension = 0;
+		
+		Node<T> currNode = root;
+		boolean foundKeys = false;
+		
+		while( !travelStack.isEmpty() && !foundKeys){
+			Comparable currKey = currNode.getKey(currDimension);
+			
+			if (currKey.compareTo( keys[currDimension] ) > 0){
+				Node<T> leftChild = currNode.getLeftChild();
+				if ( leftChild != null ){
+					travelStack.push( leftChild );
+					dimensionStack.push( incrementDimension(currDimension) );
+				}
+				
+			} else if ( isSameKeys(keys, currNode.getAllKeys() ) ) {
+				retValue = currNode.getValue();
+				foundKeys = true;
+				
+			} else {
+				Node<T> rightChild = currNode.getRightChild();
+				if ( rightChild != null ){
+					travelStack.push( rightChild );
+					dimensionStack.push( incrementDimension(currDimension) );
+				}
+			}
+			
+			currNode = travelStack.pop();
+			currDimension = dimensionStack.pop();
+		}
+		return retValue;
+	}
+	
+	public boolean contains(Comparable[] keys){
+		T value = get(keys);
+		if (value != null){
+			return true;
+		}
+		return false;
+	}
+	
 	private void addNodeToStack(Stack<Node<T>> theStack, Node<T> toAdd){
 		if (toAdd != null){
 			theStack.push(toAdd);
@@ -36,19 +93,19 @@ public class KDTree<T> {
 		int currDimension = 0;
 		
 		Stack<Node<T>> travelStack = new Stack<Node<T>>();
-		Stack<Integer> travelDimension = new Stack<Integer>();
+		Stack<Integer> dimensionStack = new Stack<Integer>();
 		
 		boolean done = false;
 		while (!done){
 			
 			Comparable currKey = currNode.getKey(currDimension);
-			if ( currKey.compareTo(keys[currDimension]) < 0){
+			if ( currKey.compareTo(keys[currDimension]) > 0){
 				if (currNode.getLeftChild() == null){
 					currNode.setLeftChild(keys, value);
 					done = true;
 				} else {
 					travelStack.push( currNode.getLeftChild() );
-					travelDimension.push( incrementDimension(currDimension) );
+					dimensionStack.push( incrementDimension(currDimension) );
 				}
 				
 			} else {
@@ -57,13 +114,13 @@ public class KDTree<T> {
 					done = true;
 				} else {
 					travelStack.push( currNode.getRightChild() );
-					travelDimension.push( incrementDimension(currDimension) );
+					dimensionStack.push( incrementDimension(currDimension) );
 				}
 			}
 			
 			if ( !travelStack.isEmpty() ){
 				currNode = travelStack.pop();
-				currDimension = travelDimension.pop();
+				currDimension = dimensionStack.pop();
 			}
 		}
 	} // insertInTree
@@ -95,7 +152,7 @@ public class KDTree<T> {
 	 */
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
 		if(root == null){
-			throw new NullPointerException("Root can't be null");
+			throw new NullPointerException("Root can't be null"); // TODO Returnera tomma mängden i stället?
 		}
 		Stack<Node<T>> toVisit = new Stack<Node<T>>();
 		Set<T> correctVals = new HashSet<T>();
