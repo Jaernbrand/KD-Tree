@@ -295,6 +295,9 @@ public class KDTree<T> {
 	 * An array of the higher bound values.
 	 * @return
 	 * A set containing all the values within the range.
+	 * If the root is empty it returns an empty set.
+	 * @throws IllegalArgumentException if the argumentarrays has
+	 * to few or many elements.
 	 */
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
 		if(root == null){
@@ -311,7 +314,7 @@ public class KDTree<T> {
 		nodesToVisit.push(root);
 		stackNodeLevel.push(level);
 		
-		while(!nodesToVisit.isEmpty()){
+		while(!nodesToVisit.isEmpty()){ 
 			Node<T> currNode = nodesToVisit.pop();
 			level = stackNodeLevel.pop();
 			
@@ -320,13 +323,13 @@ public class KDTree<T> {
 			boolean allKeysWithinRange = true;
 			do{
 				if(currKey.compareTo(lowest[tempLevel]) < 0 || currKey.compareTo(highest[tempLevel]) > 0){ 
-					allKeysWithinRange = false; //if outside range
+					allKeysWithinRange = false; //found value outside range
 				}else{
 					tempLevel = incrementDimension(tempLevel);
 					currKey = currNode.getKey(tempLevel);
 				}
-			}while(tempLevel != level && allKeysWithinRange);
-			
+			}while(tempLevel != level && allKeysWithinRange); //Goes through all keys in current node,  
+															  //checks if they are valid
 			if(allKeysWithinRange){
 				correctVals.add(currNode.getValue());
 			}
@@ -340,17 +343,43 @@ public class KDTree<T> {
 				stackNodeLevel.push(incrementDimension(level));
 			}
 			
-		}//while
+		}//while stack isn't empty
 		
 		return correctVals;
+		
 	}//range
 	
 	
 	
+	/**
+	 * Checks if the current node's current key leaves room for additional values
+	 * that are smaller but still within the given low bound.
+	 * @param node
+	 * The current node that is analyzed.
+	 * @param level
+	 * The global level that is compared.
+	 * @param lowBound
+	 * The lowest allowed value that's allowed within the defined range.
+	 * @return
+	 * True if there can exist addition allowed values, false if it can't.
+	 */
 	private boolean roomForSmallerKeys(Node<T> node, int level, Comparable lowBound){
 		return node.getKey(level).compareTo(lowBound) > 0;
 	}
 	
+	
+	/**
+	 * Checks if the current node's current key leaves room for additional values
+	 * that are greater but still within the given high bound.
+	 * @param node
+	 * The current node that is analyzed.
+	 * @param level
+	 * The global level that is compared.
+	 * @param highBound
+	 * The highest allowed value that's allowed within the defined range.
+	 * @return
+	 * True if there can exist addition allowed values, false if it can't.
+	 */
 	private boolean roomForBiggerKeys(Node<T> node, int level, Comparable highBound){
 		return node.getKey(level).compareTo(highBound) <= 0;
 	}
