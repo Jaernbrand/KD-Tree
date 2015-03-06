@@ -1,5 +1,7 @@
 package kdTree;
 
+import java.util.Arrays;
+
 class Node<T>{
 
 	T value;
@@ -33,6 +35,9 @@ class Node<T>{
 		return keys[i];
 	}
 	
+	Comparable[] getAllKeys(){
+		return Arrays.copyOf(keys, keys.length);
+	}
 	
 	T getValue(){
 		return value;

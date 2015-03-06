@@ -17,7 +17,19 @@ public class KDTree<T> {
 		DIMENSIONS = dimensions;
 	}
 	
+	private boolean isSameKeys(Comparable[] lhs, Comparable[] rhs){
+		for (int i=0; i < lhs.length; ++i){
+			if (lhs[i].compareTo(rhs) != 0){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	public T get(Comparable[] keys){
+		T retValue = null;
+		
 		Stack<Node<T>> travelStack = new Stack<Node<T>>();
 		Stack<Integer> dimensionStack = new Stack<Integer>();
 		
@@ -26,17 +38,32 @@ public class KDTree<T> {
 		Node<T> currNode = root;
 		boolean foundKeys = false;
 		
-		while(currNode != null && !foundKeys){
+		while( !travelStack.isEmpty() && !foundKeys){
 			Comparable currKey = currNode.getKey(currDimension);
 			
 			if (currKey.compareTo( keys[currDimension] ) > 0){
+				Node<T> leftChild = currNode.getLeftChild();
+				if ( leftChild != null ){
+					travelStack.push( leftChild );
+					dimensionStack.push( incrementDimension(currDimension) );
+				}
+				
+			} else if ( isSameKeys(keys, currNode.getAllKeys() ) ) {
+				retValue = currNode.getValue();
+				foundKeys = true;
 				
 			} else {
-				
+				Node<T> rightChild = currNode.getRightChild();
+				if ( rightChild != null ){
+					travelStack.push( rightChild );
+					dimensionStack.push( incrementDimension(currDimension) );
+				}
 			}
 			
+			currNode = travelStack.pop();
+			currDimension = dimensionStack.pop();
 		}
-		return;
+		return retValue;
 	}
 	
 	public boolean contains(Comparable[] keys){
@@ -118,7 +145,7 @@ public class KDTree<T> {
 	
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
 		if(root == null){
-			throw new NullPointerException("Root can't be null");
+			throw new NullPointerException("Root can't be null"); // TODO Returnera tomma mängden i stället?
 		}
 		Stack<Node<T>> toVisit = new Stack<Node<T>>();
 		Set<T> correctVals = new HashSet<T>();
