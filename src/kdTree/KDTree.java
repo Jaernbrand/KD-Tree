@@ -331,11 +331,11 @@ public class KDTree<T> {
 				correctVals.add(currNode.getValue());
 			}
 			
-			if(currNode.getLeftChild() != null && currNode.getKey(level).compareTo(lowest[level]) > 0){
+			if(currNode.getLeftChild() != null && roomForSmallerKeys(currNode, level, lowest[level])){ 
 				nodesToVisit.push(currNode.getLeftChild());	
 				stackNodeLevel.push(incrementDimension(level));
 			}
-			if(currNode.getRightChild() != null && currNode.getKey(level).compareTo(highest[level]) <= 0){
+			if(currNode.getRightChild() != null && roomForBiggerKeys(currNode, level, highest[level])){
 				nodesToVisit.push(currNode.getRightChild());
 				stackNodeLevel.push(incrementDimension(level));
 			}
@@ -347,45 +347,13 @@ public class KDTree<T> {
 	
 	
 	
+	private boolean roomForSmallerKeys(Node<T> node, int level, Comparable lowBound){
+		return node.getKey(level).compareTo(lowBound) > 0;
+	}
 	
-	
-//	private boolean outsideRange(Node<T> node, Comparable lowest, Comparable highest, int level){
-//		return ((node.getKey(level).compareTo(lowest) < 0) && (node.getKey(level).compareTo(highest) <= 0));
-//	}
-	
-	
-	/**
-	 * Determines if any of the child nodes are worth visiting later on.
-	 * If so, adds it to a stack.
-	 * 
-	 * @param node
-	 * The parent node.
-	 * @param lowest
-	 * The lowest value the child node i allowed to have.
-	 * @param highest
-	 * The highest value the child node i allowed to have.
-	 * @param level
-	 * The current level that we want to look at.
-	 * @param toVisit
-	 * The stack that the child node is added to if it is within the given range. 
-	 */
-//	private void analyzeChildren(Node<T> node, Comparable lowest, Comparable highest, int level, Stack<Node<T>> toVisit){
-//		
-//		Node<T> leftChild = node.getLeftChild();
-//		if(leftChild != null){
-//			if(leftChild.getKey(level).compareTo(lowest) ){
-//				
-//			}
-//			
-//			
-//			//&& childValid(node.getLeftChild(), lowest, highest, level)){
-//			//toVisit.push(node.getLeftChild());
-//		}
-//		if(node.getLeftChild() != null && childValid(node.getLeftChild(), lowest, highest, level)){
-//			toVisit.push(node.getLeftChild());
-//		}
-//		
-//	}//analyzeChildren
+	private boolean roomForBiggerKeys(Node<T> node, int level, Comparable highBound){
+		return node.getKey(level).compareTo(highBound) <= 0;
+	}
 		  
 				
 }
