@@ -54,9 +54,9 @@ public class KDTree<T> {
 	 * Equality is based on compareTo.
 	 * 
 	 * @param lhs
-	 * - one of the arrays to compare. 
+	 * - one of the arrays to compare. The array have to be an array of Comparable.
 	 * @param rhs
-	 * - one of the arrays to compare.
+	 * - one of the arrays to compare. The array have to be an array of Comparable.
 	 * @return
 	 * - true if both the arrays have the same keys.
 	 */
@@ -82,7 +82,9 @@ public class KDTree<T> {
 	/**
 	 * Finds and returns all values that have the supplied array keys as key.
 	 * @param keys
-	 * - the array containing the keys to search for.
+	 * - the array containing the keys to search for. The array have to be an 
+	 * array of Comparable.
+	 * 
 	 * @return
 	 * - a set containing all values with the array keys as key. 
 	 * 
@@ -109,6 +111,7 @@ public class KDTree<T> {
 		while( currNode != null && !foundKeys){
 			Comparable currKey = currNode.getKey(currDimension);
 			
+			// The search key is less than current node's key.
 			if (currKey.compareTo( keys[currDimension] ) > 0){
 				Node<T> leftChild = currNode.getLeftChild();
 				if ( leftChild != null ){
@@ -120,7 +123,7 @@ public class KDTree<T> {
 			} else {
 				if ( isSameKeys(keys, currNode.getAllKeys()) ){
 					retValue.add(currNode.getValue());
-					// foundKeys = true;
+					// foundKeys = true; TODO Städa eventuellt.
 				}
 				
 				Node<T> rightChild = currNode.getRightChild();
@@ -136,7 +139,7 @@ public class KDTree<T> {
 			} else {
 				currNode = null;
 			}
-		}
+		} // while-loop
 		return retValue;
 	}
 	
@@ -145,7 +148,9 @@ public class KDTree<T> {
 	 * in the keys array.
 	 * 
 	 * @param keys
-	 * - the keys to 
+	 * - the keys to search for in the KD-Tree. The array has to be an array of 
+	 * objects implementing the comparable interface.
+	 * 
 	 * @return
 	 * - true if at least one element in the tree contains the supplied key.
 	 */

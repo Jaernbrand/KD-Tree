@@ -79,6 +79,14 @@ public class KDTreeTester {
 	}
 	
 	@Test
+	public void testContainsAndGet(){
+		assertEquals(0, triDTree.size());
+		Integer[] keys = {4, 5, 6};
+		assertFalse(triDTree.contains(keys));
+		assertEquals( 0, triDTree.get(keys).size() );
+	}
+	
+	@Test
 	public void testMultipleRandomInserts3DTree(){
 		Random rnd = new Random();
 		KDTree<Integer> triIntegerTree = new KDTree<Integer>(3);
