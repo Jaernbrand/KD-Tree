@@ -2,6 +2,16 @@ package kdTree;
 
 import java.util.Arrays;
 
+/**
+ * @author Henrik Järnbrand 
+ * henrikjarnbrand@gmail.com
+ * @author Tomas Sandberg 
+ * tomassandberg86@hotmail.com
+ * 
+ *
+ * @param <T>
+ * - the type of the value in the node.
+ */
 class Node<T>{
 
 	T value;

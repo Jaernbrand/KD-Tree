@@ -59,6 +59,26 @@ public class KDTreeTester {
 	}
 	
 	@Test
+	public void testInsertSameKeyTwice(){
+		Integer[] keys = {4, 5, 6};
+		triDTree.insert( keys, "A");
+		assertTrue( triDTree.contains(keys) );
+		
+		Set<String> oracle = new HashSet<String>();
+		oracle.add("A");
+		oracle.add("B");
+		
+		assertEquals(oracle, triDTree.get(keys) );
+		assertEquals( 1, triDTree.size() );
+		
+		triDTree.insert( keys, "B");
+		assertTrue( triDTree.contains(keys) );
+		
+		assertEquals(oracle, triDTree.get(keys) );
+		assertEquals( 2, triDTree.size() );
+	}
+	
+	@Test
 	public void testMultipleRandomInserts3DTree(){
 		Random rnd = new Random();
 		KDTree<Integer> triIntegerTree = new KDTree<Integer>(3);
