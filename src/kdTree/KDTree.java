@@ -47,7 +47,6 @@ public class KDTree<T> {
 					currNode.setLeftChild(keys, value);
 					done = true;
 				} else {
-					//addNodeToStack(travelStack, currNode.getLeftChild());
 					travelStack.push( currNode.getLeftChild() );
 					travelDimension.push( incrementDimension(currDimension) );
 				}
@@ -57,7 +56,6 @@ public class KDTree<T> {
 					currNode.setRightChild(keys, value);
 					done = true;
 				} else {
-					//addNodeToStack(travelStack, currNode.getRightChild());
 					travelStack.push( currNode.getRightChild() );
 					travelDimension.push( incrementDimension(currDimension) );
 				}
@@ -86,6 +84,15 @@ public class KDTree<T> {
 	} // insert
 	
 	
+	/**
+	 * Retrieves all the values that are within the given range.
+	 * @param lowest
+	 * An array of the lower bound values.
+	 * @param highest
+	 * An array of the higher bound values.
+	 * @return
+	 * A set containing all the values within the range.
+	 */
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
 		if(root == null){
 			throw new NullPointerException("Root can't be null");
@@ -117,12 +124,41 @@ public class KDTree<T> {
 	}//range
 	
 	
+	
+	/**
+	 * Determines if a child of the current node is within a given range.
+	 * @param node
+	 * The parent node.
+	 * @param lowest
+	 * The lowest value the child node i allowed to have.
+	 * @param highest
+	 * The highest value the child node i allowed to have.
+	 * @param level
+	 * The current level that we want to look at.
+	 * @return
+	 * Returns true if the child is within the given range. 
+	 */
 	private boolean childValid(Node<T> node, Comparable lowest, Comparable highest, int level){
 		return ((node.getKey(level).compareTo(lowest) >= 0) && 
 				(node.getKey(level).compareTo(highest) <= 0));
 	}
 	
 	
+	/**
+	 * Determines if any of the child nodes are worth visiting later on.
+	 * If so, adds it to a stack.
+	 * 
+	 * @param node
+	 * The parent node.
+	 * @param lowest
+	 * The lowest value the child node i allowed to have.
+	 * @param highest
+	 * The highest value the child node i allowed to have.
+	 * @param level
+	 * The current level that we want to look at.
+	 * @param toVisit
+	 * The stack that the child node is added to if it is within the given range. 
+	 */
 	private void analyzeChildren(Node<T> node, Comparable lowest, 
 			Comparable highest, int level, Stack<Node<T>> toVisit){
 		

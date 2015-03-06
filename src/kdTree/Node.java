@@ -27,12 +27,19 @@ class Node<T>{
 		return rightChild;
 	}
 	
+	void setLeftChild(Node<T> leftChild){
+		this.leftChild = leftChild;
+	}
+	
+	void setRightChild(Node<T> rightChild){
+		this.rightChild = rightChild;
+	}
+	
 	Comparable getKey(int i){
 		if(i < 0)
 			throw new IndexOutOfBoundsException("Index can't be negative");
 		return keys[i];
 	}
-	
 	
 	T getValue(){
 		return value;
