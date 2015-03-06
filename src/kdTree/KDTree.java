@@ -293,28 +293,47 @@ public class KDTree<T> {
 	 */
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
 		if(root == null){
-			throw new NullPointerException("Root can't be null"); // TODO Returnera tomma mängden i stället?
+			return new HashSet<T>();
 		}
-		Stack<Node<T>> toVisit = new Stack<Node<T>>();
+		if(lowest.length != DIMENSIONS || highest.length != DIMENSIONS){
+			throw new IllegalArgumentException("The input arrays must have as many elements as there are dimensions.");
+		}
+			
+		Stack<Node<T>> nodesToVisit = new Stack<Node<T>>();
+		Stack<Integer> stackNodeLevel = new Stack<Integer>();
 		Set<T> correctVals = new HashSet<T>();
 		int level = 0;
-		toVisit.push(root);
+		nodesToVisit.push(root);
+		stackNodeLevel.push(level);
 		
-		while(!toVisit.isEmpty()){
-			Node<T> currNode = toVisit.pop();
+		while(!nodesToVisit.isEmpty()){
+			Node<T> currNode = nodesToVisit.pop();
+			level = stackNodeLevel.pop();
+			
 			Comparable currKey = currNode.getKey(level);
 			int tempLevel = level;
 			boolean allKeysWithinRange = true;
 			do{
-				if(currKey.compareTo(lowest[tempLevel]) < 0 && currKey.compareTo(highest[tempLevel]) > 0){ 
+				if(currKey.compareTo(lowest[tempLevel]) < 0 || currKey.compareTo(highest[tempLevel]) > 0){ 
 					allKeysWithinRange = false; //if outside range
+				}else{
+					tempLevel = incrementDimension(tempLevel);
+					currKey = currNode.getKey(tempLevel);
 				}
-			}while(incrementDimension(tempLevel) != level && allKeysWithinRange);
+			}while(tempLevel != level && allKeysWithinRange);
 			
 			if(allKeysWithinRange){
 				correctVals.add(currNode.getValue());
 			}
-			analyzeChildren(currNode, lowest[level], highest[level], level, toVisit);
+			
+			if(currNode.getLeftChild() != null && currNode.getKey(level).compareTo(lowest[level]) > 0){
+				nodesToVisit.push(currNode.getLeftChild());	
+				stackNodeLevel.push(incrementDimension(level));
+			}
+			if(currNode.getRightChild() != null && currNode.getKey(level).compareTo(highest[level]) <= 0){
+				nodesToVisit.push(currNode.getRightChild());
+				stackNodeLevel.push(incrementDimension(level));
+			}
 			
 		}//while
 		
@@ -323,23 +342,11 @@ public class KDTree<T> {
 	
 	
 	
-	/**
-	 * Determines if a child of the current node is within a given range.
-	 * @param node
-	 * The parent node.
-	 * @param lowest
-	 * The lowest value the child node i allowed to have.
-	 * @param highest
-	 * The highest value the child node i allowed to have.
-	 * @param level
-	 * The current level that we want to look at.
-	 * @return
-	 * Returns true if the child is within the given range. 
-	 */
-	private boolean childValid(Node<T> node, Comparable lowest, Comparable highest, int level){
-		return ((node.getKey(level).compareTo(lowest) >= 0) && 
-				(node.getKey(level).compareTo(highest) <= 0));
-	}
+	
+	
+//	private boolean outsideRange(Node<T> node, Comparable lowest, Comparable highest, int level){
+//		return ((node.getKey(level).compareTo(lowest) < 0) && (node.getKey(level).compareTo(highest) <= 0));
+//	}
 	
 	
 	/**
@@ -357,17 +364,23 @@ public class KDTree<T> {
 	 * @param toVisit
 	 * The stack that the child node is added to if it is within the given range. 
 	 */
-	private void analyzeChildren(Node<T> node, Comparable lowest, 
-			Comparable highest, int level, Stack<Node<T>> toVisit){
-		
-		if(node.getLeftChild() != null && childValid(node.getLeftChild(), lowest, highest, level)){
-			toVisit.push(node.getLeftChild());
-		}
-		if(node.getLeftChild() != null && childValid(node.getLeftChild(), lowest, highest, level)){
-			toVisit.push(node.getLeftChild());
-		}
-		
-	}//analyzeChildren
+//	private void analyzeChildren(Node<T> node, Comparable lowest, Comparable highest, int level, Stack<Node<T>> toVisit){
+//		
+//		Node<T> leftChild = node.getLeftChild();
+//		if(leftChild != null){
+//			if(leftChild.getKey(level).compareTo(lowest) ){
+//				
+//			}
+//			
+//			
+//			//&& childValid(node.getLeftChild(), lowest, highest, level)){
+//			//toVisit.push(node.getLeftChild());
+//		}
+//		if(node.getLeftChild() != null && childValid(node.getLeftChild(), lowest, highest, level)){
+//			toVisit.push(node.getLeftChild());
+//		}
+//		
+//	}//analyzeChildren
 		  
 				
 }
