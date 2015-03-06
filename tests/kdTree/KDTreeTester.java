@@ -2,7 +2,9 @@ package kdTree;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -48,7 +50,7 @@ public class KDTreeTester {
 	
 	
 	private KDTree<String> buildTestTree(){
-		KDTree<String> fuknTree = new KDTree<String>(3);
+		KDTree<String> tree = new KDTree<String>(3);
 
 		Integer keys[] = {45,60,32,20,40,15,56,78,9,80,55,11,43,42,60};
 		
@@ -65,17 +67,17 @@ public class KDTreeTester {
 			}//for
 			x = 0;
 			lapNr++;
-			fuknTree.insert(myKeys, values[i]);
+			tree.insert(myKeys, values[i]);
 		}//for
-		return fuknTree;
+		return tree;
 	}
 	
 	@Test
 	public void testInsertABCDE(){
-		KDTree<String> fuknTree = buildTestTree();
+		KDTree<String> KDtree = buildTestTree();
 		
 		//A
-		Node<String> root = fuknTree.getRoot();
+		Node<String> root = KDtree.getRoot();
 		assertEquals(root.getValue(),"A");
 		Integer OracleA[] = {45,60,32};
 		Comparable keysForA[] = root.getAllKeys();
@@ -114,6 +116,16 @@ public class KDTreeTester {
 		for(int i = 0; i < 3; ++i)
 			assertEquals(OracleE[i], keysForE[i]);
 		
+	}
+	
+	@Test
+	public void testRangeSearch(){
+		KDTree<String> KDtree = buildTestTree();
+		Integer[] low = {40, 40, 40};
+		Integer[] high = {60, 60, 60};
+		Set<String> withinRange = KDtree.range(low, high);
+		assertEquals(withinRange.size(),1);
+		assertTrue(withinRange.contains("E"));
 	}
 	
 	
