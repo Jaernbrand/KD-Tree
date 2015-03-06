@@ -17,6 +17,36 @@ public class KDTree<T> {
 		DIMENSIONS = dimensions;
 	}
 	
+	public T get(Comparable[] keys){
+		Stack<Node<T>> travelStack = new Stack<Node<T>>();
+		Stack<Integer> dimensionStack = new Stack<Integer>();
+		
+		int currDimension = 0;
+		
+		Node<T> currNode = root;
+		boolean foundKeys = false;
+		
+		while(currNode != null && !foundKeys){
+			Comparable currKey = currNode.getKey(currDimension);
+			
+			if (currKey.compareTo( keys[currDimension] ) > 0){
+				
+			} else {
+				
+			}
+			
+		}
+		return;
+	}
+	
+	public boolean contains(Comparable[] keys){
+		T value = get(keys);
+		if (value != null){
+			return true;
+		}
+		return false;
+	}
+	
 	private void addNodeToStack(Stack<Node<T>> theStack, Node<T> toAdd){
 		if (toAdd != null){
 			theStack.push(toAdd);
@@ -36,20 +66,20 @@ public class KDTree<T> {
 		int currDimension = 0;
 		
 		Stack<Node<T>> travelStack = new Stack<Node<T>>();
-		Stack<Integer> travelDimension = new Stack<Integer>();
+		Stack<Integer> dimensionStack = new Stack<Integer>();
 		
 		boolean done = false;
 		while (!done){
 			
 			Comparable currKey = currNode.getKey(currDimension);
-			if ( currKey.compareTo(keys[currDimension]) < 0){
+			if ( currKey.compareTo(keys[currDimension]) > 0){
 				if (currNode.getLeftChild() == null){
 					currNode.setLeftChild(keys, value);
 					done = true;
 				} else {
 					//addNodeToStack(travelStack, currNode.getLeftChild());
 					travelStack.push( currNode.getLeftChild() );
-					travelDimension.push( incrementDimension(currDimension) );
+					dimensionStack.push( incrementDimension(currDimension) );
 				}
 				
 			} else {
@@ -59,13 +89,13 @@ public class KDTree<T> {
 				} else {
 					//addNodeToStack(travelStack, currNode.getRightChild());
 					travelStack.push( currNode.getRightChild() );
-					travelDimension.push( incrementDimension(currDimension) );
+					dimensionStack.push( incrementDimension(currDimension) );
 				}
 			}
 			
 			if ( !travelStack.isEmpty() ){
 				currNode = travelStack.pop();
-				currDimension = travelDimension.pop();
+				currDimension = dimensionStack.pop();
 			}
 		}
 	} // insertInTree
