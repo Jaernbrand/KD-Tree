@@ -26,5 +26,12 @@ class Node<T>{
 	}
 	
 	
+	T getValue(){
+		return value;
+	}
+	
+	
+	
+	
 	
 }
