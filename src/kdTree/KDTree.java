@@ -1,5 +1,6 @@
 package kdTree;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -9,6 +10,8 @@ public class KDTree<T> {
 	private final int DIMENSIONS;
 	private Node<T> root;
 	
+	private int size = 0;
+	
 	public KDTree(int dimensions){
 		if (dimensions < 2){
 			throw new IllegalArgumentException("USE A BINARY TREE! BITCH!");
@@ -17,9 +20,13 @@ public class KDTree<T> {
 		DIMENSIONS = dimensions;
 	}
 	
+	public int size(){
+		return size;
+	}
+	
 	private boolean isSameKeys(Comparable[] lhs, Comparable[] rhs){
 		for (int i=0; i < lhs.length; ++i){
-			if (lhs[i].compareTo(rhs) != 0){
+			if (lhs[i].compareTo(rhs[i]) != 0){
 				return false;
 			}
 		}
@@ -27,8 +34,8 @@ public class KDTree<T> {
 		return true;
 	}
 	
-	public T get(Comparable[] keys){
-		T retValue = null;
+	public Set<T> get(Comparable[] keys){
+		Set<T> retValue = new HashSet<T>();
 		
 		Stack<Node<T>> travelStack = new Stack<Node<T>>();
 		Stack<Integer> dimensionStack = new Stack<Integer>();
@@ -38,7 +45,7 @@ public class KDTree<T> {
 		Node<T> currNode = root;
 		boolean foundKeys = false;
 		
-		while( !travelStack.isEmpty() && !foundKeys){
+		while( currNode != null && !foundKeys){
 			Comparable currKey = currNode.getKey(currDimension);
 			
 			if (currKey.compareTo( keys[currDimension] ) > 0){
@@ -48,11 +55,12 @@ public class KDTree<T> {
 					dimensionStack.push( incrementDimension(currDimension) );
 				}
 				
-			} else if ( isSameKeys(keys, currNode.getAllKeys() ) ) {
-				retValue = currNode.getValue();
-				foundKeys = true;
-				
 			} else {
+				if ( isSameKeys(keys, currNode.getAllKeys()) ){
+					retValue.add(currNode.getValue());
+					foundKeys = true;
+				}
+				
 				Node<T> rightChild = currNode.getRightChild();
 				if ( rightChild != null ){
 					travelStack.push( rightChild );
@@ -60,15 +68,20 @@ public class KDTree<T> {
 				}
 			}
 			
-			currNode = travelStack.pop();
-			currDimension = dimensionStack.pop();
+			if (!travelStack.isEmpty()){
+				currNode = travelStack.pop();
+				currDimension = dimensionStack.pop();
+			} else {
+				currNode = null;
+			}
 		}
 		return retValue;
 	}
 	
 	public boolean contains(Comparable[] keys){
-		T value = get(keys);
-		if (value != null){
+		// TODO Kan optimeras.
+		Set<T> value = get(keys);
+		if (value.size() > 0){
 			return true;
 		}
 		return false;
@@ -101,22 +114,35 @@ public class KDTree<T> {
 			Comparable currKey = currNode.getKey(currDimension);
 			if ( currKey.compareTo(keys[currDimension]) > 0){
 				if (currNode.getLeftChild() == null){
-					currNode.setLeftChild(keys, value);
+					currNode.setLeftChild(Arrays.copyOf(keys, keys.length), value);
+					++size;
 					done = true;
 				} else {
 					travelStack.push( currNode.getLeftChild() );
 					dimensionStack.push( incrementDimension(currDimension) );
 				}
 				
+			// The insert key is greater than or equal to current nodes key.
 			} else {
-				if (currNode.getRightChild() == null){
-					currNode.setRightChild(keys, value);
+				if ( isSameKeys(keys, currNode.getAllKeys()) && 
+						currNode.getValue().equals(value) ){
+					
+					// Don't insert a new node if an identical node already exists.
 					done = true;
+					
 				} else {
-					travelStack.push( currNode.getRightChild() );
-					dimensionStack.push( incrementDimension(currDimension) );
-				}
-			}
+					if (currNode.getRightChild() != null){
+						travelStack.push( currNode.getRightChild() );
+						dimensionStack.push( incrementDimension(currDimension) );
+						
+					} else {
+						currNode.setRightChild(Arrays.copyOf(keys, keys.length), value);
+						++size;
+						done = true;
+						
+					} // check for right child
+				} // check if new keys and value is identical to current node.
+			} // compare keys
 			
 			if ( !travelStack.isEmpty() ){
 				currNode = travelStack.pop();
@@ -134,7 +160,8 @@ public class KDTree<T> {
 		}
 		
 		if (root == null){
-			root = new Node<T>(keys, value);
+			root = new Node<T>(Arrays.copyOf(keys, keys.length), value);
+			++size;
 		} else {
 			insertInTree(keys, value);
 		}
