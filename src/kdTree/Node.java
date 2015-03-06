@@ -1,5 +1,7 @@
 package kdTree;
 
+import java.util.Arrays;
+
 class Node<T>{
 
 	T value;
@@ -27,12 +29,12 @@ class Node<T>{
 		return rightChild;
 	}
 	
-	void setLeftChild(Node<T> leftChild){
-		this.leftChild = leftChild;
+	void setLeftChild(Comparable[] keys, T value){
+		leftChild = new Node<T>(keys, value);
 	}
 	
-	void setRightChild(Node<T> rightChild){
-		this.rightChild = rightChild;
+	void setRightChild(Comparable[] keys, T value){
+		rightChild = new Node<T>(keys, value);
 	}
 	
 	Comparable getKey(int i){
@@ -41,6 +43,9 @@ class Node<T>{
 		return keys[i];
 	}
 	
+	Comparable[] getAllKeys(){
+		return Arrays.copyOf(keys, keys.length);
+	}
 	T getValue(){
 		return value;
 	}
