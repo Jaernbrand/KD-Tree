@@ -27,6 +27,16 @@ public class KDTree<T> {
 		return true;
 	}
 	
+	
+	/**
+	 * Only for testing purposes.
+	 * @return
+	 * The root node obviously.
+	 */
+	public Node<T> getRoot(){
+		return root;
+	}
+	
 	public T get(Comparable[] keys){
 		T retValue = null;
 		
