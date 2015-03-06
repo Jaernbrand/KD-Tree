@@ -19,6 +19,14 @@ class Node<T>{
 		rightChild = null;
 	}
 	
+	Node<T> getLeftChild(){
+		return leftChild;
+	}
+	
+	Node<T> getRightChild(){
+		return rightChild;
+	}
+	
 	Comparable getKey(int i){
 		if(i < 0)
 			throw new IndexOutOfBoundsException("Index can't be negative");
