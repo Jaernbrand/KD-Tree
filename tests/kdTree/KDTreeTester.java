@@ -1,9 +1,10 @@
+package kdTree;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-
-public class TreeSetTester {
+public class KDTreeTester {
 
 	@Test
 	public void test() {
