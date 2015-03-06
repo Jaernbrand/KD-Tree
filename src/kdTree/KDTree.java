@@ -115,22 +115,60 @@ public class KDTree<T> {
 		}
 	} // insert
 	
+	
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
 		if(root == null){
 			throw new NullPointerException("Root can't be null");
 		}
-		
 		Stack<Node<T>> toVisit = new Stack<Node<T>>();
 		Set<T> correctVals = new HashSet<T>();
-		int currentLevel = 0;
-		
+		int level = 0;
 		toVisit.push(root);
+		
 		while(!toVisit.isEmpty()){
+			Node<T> currNode = toVisit.pop();
+			Comparable currKey = currNode.getKey(level);
+			int tempLevel = level;
+			boolean allKeysWithinRange = true;
+			do{
+				if(currKey.compareTo(lowest[tempLevel]) < 0 && currKey.compareTo(highest[tempLevel]) > 0){ 
+					allKeysWithinRange = false; //if outside range
+				}
+			}while(incrementDimension(tempLevel) != level && allKeysWithinRange);
 			
+			if(allKeysWithinRange){
+				correctVals.add(currNode.getValue());
+			}
+			analyzeChildren(currNode, lowest[level], highest[level], level, toVisit);
 			
-			
-		}
-			
+		}//while
+		
 		return correctVals;
+	}//range
+	
+	
+	private boolean childValid(Node<T> node, Comparable lowest, Comparable highest, int level){
+		return ((node.getKey(level).compareTo(lowest) >= 0) && 
+				(node.getKey(level).compareTo(highest) <= 0));
 	}
+	
+	
+	private void analyzeChildren(Node<T> node, Comparable lowest, 
+			Comparable highest, int level, Stack<Node<T>> toVisit){
+		
+		if(node.getLeftChild() != null && childValid(node.getLeftChild(), lowest, highest, level)){
+			toVisit.push(node.getLeftChild());
+		}
+		if(node.getLeftChild() != null && childValid(node.getLeftChild(), lowest, highest, level)){
+			toVisit.push(node.getLeftChild());
+		}
+		
+	}//analyzeChildren
+		  
+				
 }
+
+
+
+
+
