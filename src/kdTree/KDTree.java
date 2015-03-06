@@ -34,9 +34,19 @@ public class KDTree<T> {
 		return true;
 	}
 	
+	/**
+	 * Only for testing purposes.
+	 * @return
+	 * The root node obviously.
+	 */
+	public Node<T> getRoot(){
+		return root;
+	}
+	
+
 	public Set<T> get(Comparable[] keys){
 		Set<T> retValue = new HashSet<T>();
-		
+			
 		Stack<Node<T>> travelStack = new Stack<Node<T>>();
 		Stack<Integer> dimensionStack = new Stack<Integer>();
 		
