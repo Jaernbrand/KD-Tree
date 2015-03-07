@@ -295,6 +295,9 @@ public class KDTree<T> {
 	 * An array of the higher bound values.
 	 * @return
 	 * A set containing all the values within the range.
+	 * If the root is empty it returns an empty set.
+	 * @throws IllegalArgumentException if the argumentarrays has
+	 * to few or many elements.
 	 */
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
 		if(root == null){
@@ -311,7 +314,7 @@ public class KDTree<T> {
 		nodesToVisit.push(root);
 		stackNodeLevel.push(level);
 		
-		while(!nodesToVisit.isEmpty()){
+		while(!nodesToVisit.isEmpty()){ 
 			Node<T> currNode = nodesToVisit.pop();
 			level = stackNodeLevel.pop();
 			
@@ -320,72 +323,66 @@ public class KDTree<T> {
 			boolean allKeysWithinRange = true;
 			do{
 				if(currKey.compareTo(lowest[tempLevel]) < 0 || currKey.compareTo(highest[tempLevel]) > 0){ 
-					allKeysWithinRange = false; //if outside range
+					allKeysWithinRange = false; //found value outside range
 				}else{
 					tempLevel = incrementDimension(tempLevel);
 					currKey = currNode.getKey(tempLevel);
 				}
-			}while(tempLevel != level && allKeysWithinRange);
-			
+			}while(tempLevel != level && allKeysWithinRange); //Goes through all keys in current node,  
+															  //checks if they are valid
 			if(allKeysWithinRange){
 				correctVals.add(currNode.getValue());
 			}
 			
-			if(currNode.getLeftChild() != null && currNode.getKey(level).compareTo(lowest[level]) > 0){
+			if(currNode.getLeftChild() != null && roomForSmallerKeys(currNode, level, lowest[level])){ 
 				nodesToVisit.push(currNode.getLeftChild());	
 				stackNodeLevel.push(incrementDimension(level));
 			}
-			if(currNode.getRightChild() != null && currNode.getKey(level).compareTo(highest[level]) <= 0){
+			if(currNode.getRightChild() != null && roomForBiggerKeys(currNode, level, highest[level])){
 				nodesToVisit.push(currNode.getRightChild());
 				stackNodeLevel.push(incrementDimension(level));
 			}
 			
-		}//while
+		}//while stack isn't empty
 		
 		return correctVals;
+		
 	}//range
 	
 	
 	
-	
-	
-//	private boolean outsideRange(Node<T> node, Comparable lowest, Comparable highest, int level){
-//		return ((node.getKey(level).compareTo(lowest) < 0) && (node.getKey(level).compareTo(highest) <= 0));
-//	}
+	/**
+	 * Checks if the current node's current key leaves room for additional values
+	 * that are smaller but still within the given low bound.
+	 * @param node
+	 * The current node that is analyzed.
+	 * @param level
+	 * The global level that is compared.
+	 * @param lowBound
+	 * The lowest allowed value that's allowed within the defined range.
+	 * @return
+	 * True if there can exist addition allowed values, false if it can't.
+	 */
+	private boolean roomForSmallerKeys(Node<T> node, int level, Comparable lowBound){
+		return node.getKey(level).compareTo(lowBound) > 0;
+	}
 	
 	
 	/**
-	 * Determines if any of the child nodes are worth visiting later on.
-	 * If so, adds it to a stack.
-	 * 
+	 * Checks if the current node's current key leaves room for additional values
+	 * that are greater but still within the given high bound.
 	 * @param node
-	 * The parent node.
-	 * @param lowest
-	 * The lowest value the child node i allowed to have.
-	 * @param highest
-	 * The highest value the child node i allowed to have.
+	 * The current node that is analyzed.
 	 * @param level
-	 * The current level that we want to look at.
-	 * @param toVisit
-	 * The stack that the child node is added to if it is within the given range. 
+	 * The global level that is compared.
+	 * @param highBound
+	 * The highest allowed value that's allowed within the defined range.
+	 * @return
+	 * True if there can exist addition allowed values, false if it can't.
 	 */
-//	private void analyzeChildren(Node<T> node, Comparable lowest, Comparable highest, int level, Stack<Node<T>> toVisit){
-//		
-//		Node<T> leftChild = node.getLeftChild();
-//		if(leftChild != null){
-//			if(leftChild.getKey(level).compareTo(lowest) ){
-//				
-//			}
-//			
-//			
-//			//&& childValid(node.getLeftChild(), lowest, highest, level)){
-//			//toVisit.push(node.getLeftChild());
-//		}
-//		if(node.getLeftChild() != null && childValid(node.getLeftChild(), lowest, highest, level)){
-//			toVisit.push(node.getLeftChild());
-//		}
-//		
-//	}//analyzeChildren
+	private boolean roomForBiggerKeys(Node<T> node, int level, Comparable highBound){
+		return node.getKey(level).compareTo(highBound) <= 0;
+	}
 		  
 				
 }
