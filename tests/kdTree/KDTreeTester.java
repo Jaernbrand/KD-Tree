@@ -64,16 +64,16 @@ public class KDTreeTester {
 		triDTree.insert( keys, "A");
 		assertTrue( triDTree.contains(keys) );
 		
+		triDTree.insert( keys, "B");
+		
 		Set<String> oracle = new HashSet<String>();
 		oracle.add("A");
 		oracle.add("B");
 		
 		assertEquals(oracle, triDTree.get(keys) );
-		assertEquals( 1, triDTree.size() );
-		
-		triDTree.insert( keys, "B");
-		assertTrue( triDTree.contains(keys) );
-		
+		assertEquals( 2, triDTree.size() );
+
+		triDTree.insert( keys, "A");
 		assertEquals(oracle, triDTree.get(keys) );
 		assertEquals( 2, triDTree.size() );
 	}
@@ -90,27 +90,52 @@ public class KDTreeTester {
 	public void testMultipleRandomInserts3DTree(){
 		Random rnd = new Random();
 		KDTree<Integer> triIntegerTree = new KDTree<Integer>(3);
-		Map<Integer[], Integer> oracle = new HashMap<Integer[], Integer>();
+		
 		ArrayList<Integer[]> oracleList = new ArrayList<Integer[]>();
+		ArrayList<Set<Integer>> oracleValueList = new ArrayList<Set<Integer>>();
 		
 		Integer[] tmpArray = new Integer[3];
-		for (int i=0; i < 1000; ++i){
+		for (int i=0; i < 2; ++i){
 			for (int j=0; j < tmpArray.length; ++j){
 				tmpArray[j] = rnd.nextInt(1000);
 			}
 			int value = rnd.nextInt();
 			triIntegerTree.insert( tmpArray, value );
-			oracleList.add( Arrays.copyOf(tmpArray, tmpArray.length) );
-			oracle.put(Arrays.copyOf(tmpArray, tmpArray.length), value);
+			
+			int oracleValueIndex = -1;
+			for (int j=0; j < oracleList.size(); ++j){ // Henrik kommer gråta om han ser det här...
+				if ( Arrays.deepEquals(oracleList.get(j), tmpArray) ){
+					oracleValueIndex = j;
+					break;
+				}
+			}
+			
+			if (oracleValueIndex < 0){
+				Set<Integer> newOracleValue = new HashSet<Integer>();
+				newOracleValue.add(value);
+				oracleValueList.add( newOracleValue );
+				oracleList.add( Arrays.copyOf(tmpArray, tmpArray.length) );
+			} else {
+				oracleValueList.get(oracleValueIndex).add(value);
+			}
 		}
 		
 		assertEquals(oracleList.size(), triIntegerTree.size() );
 		
 		for (Integer[] arr : oracleList ){
 			assertTrue( triIntegerTree.contains(arr) );
-			//assertEquals(oracle.get(arr), triIntegerTree.get(arr) );
+			
+			int idx = -1;
+			for (int j=0; j < oracleList.size(); ++j){
+				if ( Arrays.deepEquals(oracleList.get(j), arr) ){ // ... och det här.
+					idx = j;
+					break;
+				}
+			}
+			
+			assertEquals(oracleValueList.get(idx), triIntegerTree.get(arr));
 		}
-	}
+	} // testMultipleRandomInserts3DTree
 	
 //	@Test
 //	public void testRandomInsertions(){
