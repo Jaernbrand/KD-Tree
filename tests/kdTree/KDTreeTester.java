@@ -137,6 +137,52 @@ public class KDTreeTester {
 		}
 	} // testMultipleRandomInserts3DTree
 	
+	private <T> ArrayList<T> convertArrayToArrayList(T[] array){
+		ArrayList<T> arrList = new ArrayList<T>();
+		for (int i=0; i < array.length; ++i){
+			arrList.add(array[i]);
+		}
+		return arrList;
+	}
+	
+	@Test
+	public void testMultipleRandomOperations(){
+		Random rnd = new Random();
+		KDTree<Integer> tree = new KDTree<Integer>(3);
+		Map<ArrayList<Integer>, Set<Integer>> oracle = new HashMap<ArrayList<Integer>, Set<Integer>>();
+		
+		for (int i=0; i < 1000; ++i){
+			Integer[] tmpArray = new Integer[3];
+			for (int j=0; j < tmpArray.length; ++j){
+				tmpArray[j] = rnd.nextInt(1000);
+			}
+			Integer newValue = rnd.nextInt(2000);
+			tree.insert( tmpArray, newValue);
+			
+			Set<Integer> values = oracle.get(convertArrayToArrayList(tmpArray));
+			if (values == null){
+				values = new HashSet<Integer>();
+			}
+			values.add(newValue);
+			
+			oracle.put(convertArrayToArrayList(tmpArray), values);
+			/*
+			while (tree.size() > 0 && rnd.nextBoolean() ){
+				tree.remove(); // remove random element
+			}*/
+		}
+		
+		assertTrue( oracle.keySet().size() <= tree.size() );
+		
+		for (ArrayList<Integer> li : oracle.keySet() ){
+			Comparable[] currKey = new Comparable[3];
+			li.toArray(currKey);
+			assertTrue( tree.contains( currKey ) );
+			
+			assertEquals(oracle.get(li), tree.get(currKey) );
+		}
+	} // testMultipleRandomOperations
+	
 //	@Test
 //	public void testRandomInsertions(){
 //		KDTree<String> fuknTree = new KDTree<String>(3);
