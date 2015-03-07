@@ -145,6 +145,24 @@ public class KDTreeTester {
 		return arrList;
 	}
 	
+	private Integer[] constructRndIntegerArray(Random rnd, int ceiling){
+		Integer[] tmpArray = new Integer[3];
+		for (int j=0; j < tmpArray.length; ++j){
+			tmpArray[j] = rnd.nextInt(ceiling);
+		}
+		return tmpArray;
+	}
+	
+	private boolean isInRange(Comparable[] oracleKey, Comparable[] lowest, Comparable[] highest, int dimensions){
+		for (int i=0; i < dimensions; ++i){
+			if (oracleKey[i].compareTo(lowest[i]) < 0 || oracleKey[i].compareTo(highest[i]) > 0){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	@Test
 	public void testMultipleRandomOperations(){
 		Random rnd = new Random();
@@ -152,10 +170,8 @@ public class KDTreeTester {
 		Map<ArrayList<Integer>, Set<Integer>> oracle = new HashMap<ArrayList<Integer>, Set<Integer>>();
 		
 		for (int i=0; i < 1000; ++i){
-			Integer[] tmpArray = new Integer[3];
-			for (int j=0; j < tmpArray.length; ++j){
-				tmpArray[j] = rnd.nextInt(1000);
-			}
+			Integer[] tmpArray = constructRndIntegerArray(rnd, 1000);
+			
 			Integer newValue = rnd.nextInt(2000);
 			tree.insert( tmpArray, newValue);
 			
@@ -170,7 +186,25 @@ public class KDTreeTester {
 			while (tree.size() > 0 && rnd.nextBoolean() ){
 				tree.remove(); // remove random element
 			}*/
-		}
+			
+			if (rnd.nextBoolean()){
+				Integer[] lowest = constructRndIntegerArray(rnd, 1000);
+				Integer[] highest = constructRndIntegerArray(rnd, 1000);
+				Set<Integer> range = tree.range(lowest, highest);
+				
+				assertTrue(range.size() <= tree.size());
+				for (ArrayList<Integer> li : oracle.keySet()){
+					Comparable[] oracleKey = new Comparable[3];
+					li.toArray(oracleKey);
+					if ( isInRange(oracleKey, lowest, highest, 3) ){
+						Set<Integer> vv = oracle.get(li);
+						for (Integer v : vv)
+							assertTrue(range.contains( v ));
+					}
+				}
+				
+			}
+		} // for-loop
 		
 		assertTrue( oracle.keySet().size() <= tree.size() );
 		
