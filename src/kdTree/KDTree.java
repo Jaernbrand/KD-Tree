@@ -296,7 +296,7 @@ public class KDTree<T> {
 	 * @return
 	 * A set containing all the values within the range.
 	 * If the root is empty it returns an empty set.
-	 * @throws IllegalArgumentException if the argumentarrays has
+	 * @throws IllegalArgumentException if the argument arrays have
 	 * to few or many elements.
 	 */
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
