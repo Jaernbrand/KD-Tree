@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.Stack;
 
 /**
- * The tree sorts values by K number of keys, also refered to as dimensions. The 
+ * The tree sorts values by K number of keys, also referred to as dimensions. The 
  * number of dimensions have to be specified when a new KDTree is created.
  * 
  * The arrays containing the keys are required to be the same length as the 
