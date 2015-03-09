@@ -6,15 +6,26 @@ import java.util.Set;
 import java.util.Stack;
 
 /**
+ * The tree sorts values by K number of keys, also called K dimensions. The 
+ * number of dimensions have to be specified when a new KDTree is created.
+ * 
+ * The arrays containing the keys are required to be the same length as the 
+ * number of dimensions. The objects in the key arrays have to implement the 
+ * interface Comparable. Objects at the same index but in different keys also 
+ * have to be comparable with each other. For instance, the object at index 0 
+ * in one key array have to be comparable with all other objects at index 0 in 
+ * all other key arrays. 
+ * 
+ * It's recommended to implement equals for any value-objects, since it's used 
+ * to avoid duplicate key-value pairs.
+ *
+ * @param <T>
+ * - the type of the values in the kd-tree.
+ * 
  * @author Henrik Järnbrand 
  * henrikjarnbrand@gmail.com
  * @author Tomas Sandberg 
  * tomassandberg86@hotmail.com
- * 
- * KDTree. It's a tree. With K dimensions. TODO
- *
- * @param <T>
- * - the type of the values in the kd-tree. 
  */
 public class KDTree<T> {
 	
