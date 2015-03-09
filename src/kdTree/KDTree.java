@@ -29,7 +29,7 @@ import java.util.Stack;
  */
 public class KDTree<T> {
 	
-	private final int DIMENSIONS; // TODO göra public?
+	private final int DIMENSIONS;
 	private Node<T> root;
 	
 	private int size = 0;
@@ -135,7 +135,6 @@ public class KDTree<T> {
 			} else {
 				if ( isSameKeys(keys, currNode.getAllKeys()) ){
 					retValue.add(currNode.getValue());
-					// foundKeys = true; TODO Städa eventuellt.
 				}
 				
 				Node<T> rightChild = currNode.getRightChild();
@@ -165,9 +164,12 @@ public class KDTree<T> {
 	 * 
 	 * @return
 	 * - true if at least one element in the tree contains the supplied key.
+	 * 
+	 * @throws NullPointerException if keys is null.
+	 * @throws IllegalArgumentException if the length of keys isn't equal to 
+	 * the number of dimensions in the KD-Tree.
 	 */
 	public boolean contains(Comparable[] keys){
-		// TODO Kan optimeras.
 		Set<T> value = get(keys);
 		if (value.size() > 0){
 			return true;
