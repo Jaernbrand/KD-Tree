@@ -29,7 +29,7 @@ import java.util.Stack;
  */
 public class KDTree<T> {
 	
-	private final int DIMENSIONS; // TODO göra public?
+	private final int DIMENSIONS;
 	private Node<T> root;
 	
 	private int size = 0;
@@ -300,14 +300,22 @@ public class KDTree<T> {
 	
 	
 	/**
-	 * Retrieves all the values that are within the given range.
+	 * Retrieves all the values that are within the given range. 
+	 * The range is kept between values that are found at the same index in the
+	 * argument arrays highest and lowest.
+	 * 
 	 * @param lowest
 	 * An array of the lower bound values.
+	 * 
 	 * @param highest
 	 * An array of the higher bound values.
+	 * 
 	 * @return
-	 * A set containing all the values within the range.
+	 * A set containing all the values within the range. If the root is empty an empty set is returned. 
 	 * If the root is empty it returns an empty set.
+	 * 
+	 * @throws NullPointerException if any of the arguments are null.
+	 * 
 	 * @throws IllegalArgumentException if the argument arrays have
 	 * to few or many elements.
 	 */
@@ -318,7 +326,6 @@ public class KDTree<T> {
 		if(lowest.length != DIMENSIONS || highest.length != DIMENSIONS){
 			throw new IllegalArgumentException("The input arrays must have as many elements as there are dimensions.");
 		}
-		
 		if(root == null){
 			return new HashSet<T>();
 		}
@@ -370,12 +377,16 @@ public class KDTree<T> {
 	/**
 	 * Checks if the current node's current key leaves room for additional values
 	 * that are smaller but still within the given low bound.
+	 * 
 	 * @param node
 	 * The current node that is analyzed.
+	 * 
 	 * @param level
 	 * The global level that is compared.
+	 * 
 	 * @param lowBound
 	 * The lowest allowed value that's allowed within the defined range.
+	 * 
 	 * @return
 	 * True if there can exist addition allowed values, false if it can't.
 	 */
@@ -387,12 +398,16 @@ public class KDTree<T> {
 	/**
 	 * Checks if the current node's current key leaves room for additional values
 	 * that are greater but still within the given high bound.
+	 * 
 	 * @param node
 	 * The current node that is analyzed.
+	 * 
 	 * @param level
 	 * The global level that is compared.
+	 * 
 	 * @param highBound
 	 * The highest allowed value that's allowed within the defined range.
+	 * 
 	 * @return
 	 * True if there can exist addition allowed values, false if it can't.
 	 */
@@ -402,8 +417,4 @@ public class KDTree<T> {
 		  
 				
 }
-
-
-
-
 
