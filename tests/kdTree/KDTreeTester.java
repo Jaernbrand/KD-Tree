@@ -25,6 +25,65 @@ public class KDTreeTester {
 		KDTree<Integer> toSmall = new KDTree<Integer>(1);
 	}
 	
+	@Test(expected=NullPointerException.class)
+	public void testNullGet(){
+		triDTree.get(null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testGetArgumentToSmall(){
+		Integer[] arr = {1, 2};
+		triDTree.get(arr);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testGetArgumentToLarge(){
+		Integer[] arr = {1, 2, 3, 4};
+		triDTree.get(arr);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testInsertArgumentToSmall(){
+		Integer[] arr = {1, 2};
+		triDTree.insert(arr, "A");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testInsertArgumentToLarge(){
+		Integer[] arr = {1, 2, 3, 4};
+		triDTree.insert(arr, "A");
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testInsertNull(){
+		triDTree.insert(null, "A");
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testRangeLowestNull(){
+		Integer[] arr = {1, 2, 3};
+		triDTree.range(null, arr);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testRangeHighestNull(){
+		Integer[] arr = {1, 2, 3};
+		triDTree.range(arr, null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRangeArgumentToLarge(){
+		Integer[] arr = {1, 2, 3, 4};
+		Integer[] arr2 = {4, 5, 6};
+		triDTree.range(arr, arr2);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testRangeArgumentToSmall(){
+		Integer[] arr = {1, 2};
+		Integer[] arr2 = {4, 5, 6};
+		triDTree.range(arr, arr2);
+	}
 	
 	@Test
 	public void testInsertOneElement3DTree(){

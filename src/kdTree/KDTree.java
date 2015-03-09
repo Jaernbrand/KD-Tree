@@ -11,6 +11,7 @@ import java.util.Stack;
  * @author Tomas Sandberg 
  * tomassandberg86@hotmail.com
  * 
+ * KDTree. It's a tree. With K dimensions. TODO
  *
  * @param <T>
  * - the type of the values in the kd-tree. 
@@ -300,11 +301,15 @@ public class KDTree<T> {
 	 * to few or many elements.
 	 */
 	public Set<T> range(Comparable[] lowest, Comparable[] highest){
-		if(root == null){
-			return new HashSet<T>();
+		if (lowest == null || highest == null){
+			throw new NullPointerException();
 		}
 		if(lowest.length != DIMENSIONS || highest.length != DIMENSIONS){
 			throw new IllegalArgumentException("The input arrays must have as many elements as there are dimensions.");
+		}
+		
+		if(root == null){
+			return new HashSet<T>();
 		}
 			
 		Stack<Node<T>> nodesToVisit = new Stack<Node<T>>();
