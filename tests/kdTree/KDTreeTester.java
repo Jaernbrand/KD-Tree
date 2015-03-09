@@ -86,6 +86,14 @@ public class KDTreeTester {
 	}
 	
 	@Test
+	public void testRangeEmptyTree(){
+		Integer[] lowest = {10, 10, 10};
+		Integer[] highest = {20, 20, 20};
+		HashSet<String> oracle = new HashSet<String>();
+		assertEquals(oracle, triDTree.range(lowest, highest) );
+	}
+	
+	@Test
 	public void testInsertOneElement3DTree(){
 		Integer[] keys = {4, 5, 6};
 		triDTree.insert( keys, "A");
