@@ -284,28 +284,6 @@ public class KDTreeTester {
 		}
 	} // testMultipleRandomOperations
 	
-//	@Test
-//	public void testRandomInsertions(){
-//		KDTree<String> fuknTree = new KDTree<String>(3);
-//
-//		Integer keys[] = new Integer[100];
-//		for(int i = 0; i < keys.length; ++i)
-//			keys[i] = i;
-//		
-//		Random rand = new Random();
-//		String values[] = {"A","B","C","D","E"};
-//		
-//		for(int i = 0; i < values.length; ++i){
-//			Integer myKeys[] = new Integer[3];
-//			for(int j = 0; j < 3; ++j){
-//				myKeys[j] = rand.nextInt(99);
-//			}//for
-//			
-//			fuknTree.insert(myKeys, values[i]);
-//		}//for
-//		
-//	}
-	
 	
 	private KDTree<String> buildTestTree(){
 		KDTree<String> tree = new KDTree<String>(3);
@@ -328,7 +306,8 @@ public class KDTreeTester {
 			tree.insert(myKeys, values[i]);
 		}//for
 		return tree;
-	}
+		
+	}//buildTestTree
 	
 	@Test
 	public void testInsertABCDE(){
@@ -374,7 +353,9 @@ public class KDTreeTester {
 		for(int i = 0; i < 3; ++i)
 			assertEquals(OracleE[i], keysForE[i]);
 		
-	}
+	}//testInsertABCDE
+	
+	
 	
 	@Test
 	public void testRangeSearch40to60(){
@@ -399,7 +380,7 @@ public class KDTreeTester {
 	
 	
 	@Test
-	public void testRangeSearchWithExternalLibraryJavaML(){
+	public void testRandomRangeSearchWithExternalLibraryJavaML(){
 		
 		KDTree<String> tree = new KDTree<String>(3); 
 		net.sf.javaml.core.kdtree.KDTree oracle = new net.sf.javaml.core.kdtree.KDTree(3);
@@ -422,11 +403,12 @@ public class KDTreeTester {
 				double d = rnd.nextInt(99) + rnd.nextDouble();
 				temp[j] = d;
 				temp2[j] = d;
-			}
+			}//for
 			oracle.insert(temp, text[i]);
 			tree.insert(temp2, text[i]);
-		}
+		}//for
 		
+		//low 10, high 60
 		double[] low = {10.0, 10.0, 10.0};
 		double[] high = {60.0, 60.0, 60.0};
 		Double[] low2 = {10.0, 10.0, 10.0};
@@ -434,13 +416,13 @@ public class KDTreeTester {
 		
 		Object[] oraceWithinRange = oracle.range(low, high);
 		Set<String> testtreeWithinRange = tree.range(low2,high2);
+		
 		assertEquals(oraceWithinRange.length, testtreeWithinRange.size());
 		for(int i = 0; i < oraceWithinRange.length; ++i){
 			assertTrue(testtreeWithinRange.contains(oraceWithinRange[i]));
 		}
 	
-		
-	}
+	}//testRandomRangeSearchWithExternalLibraryJavaML
 	
 }
 

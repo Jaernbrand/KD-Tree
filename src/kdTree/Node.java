@@ -8,7 +8,10 @@ import java.util.Arrays;
  * @author Tomas Sandberg 
  * tomassandberg86@hotmail.com
  * 
- *
+ * 
+ * Node is used as nodes in the KDTree.
+ * An arary of Comparable-objects represent the keys stored in the node.
+ * 
  * @param <T>
  * - the type of the value in the node.
  */
@@ -18,6 +21,7 @@ class Node<T>{
 	Comparable[] keys; //No type inferred because polymorphism is wanted
 	Node<T> leftChild;
 	Node<T> rightChild;
+	
 	
 	Node(Comparable[] keys, T value){
 		if(keys.length == 0)
@@ -56,12 +60,11 @@ class Node<T>{
 	Comparable[] getAllKeys(){
 		return Arrays.copyOf(keys, keys.length);
 	}
+	
 	T getValue(){
 		return value;
 	}
 	
-	
-	
-	
-	
 }
+
+
