@@ -397,6 +397,52 @@ public class KDTreeTester {
 		assertTrue(withinRange.contains("D"));
 	}
 	
+	
+	@Test
+	public void testRangeSearchWithExternalLibraryJavaML(){
+		
+		KDTree<String> tree = new KDTree<String>(3); 
+		net.sf.javaml.core.kdtree.KDTree oracle = new net.sf.javaml.core.kdtree.KDTree(3);
+		String[] text = {"A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9",
+						 "B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9",
+						 "C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9",
+						 "D0", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
+						 "E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9",
+						 "F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9",
+						 "G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9",
+						 "H0", "H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9",
+						 "I0", "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9",
+						 "J0", "J1", "J2", "J3", "J4", "J5", "J6", "J7", "J8", "J9"};
+		
+		Random rnd = new Random();
+		for(int i = 0; i < 100; ++i){
+			double[] temp = new double[3];
+			Double[] temp2 = new Double[3];
+			for(int j = 0; j < 3; ++j){
+				double d = rnd.nextInt(99) + rnd.nextDouble();
+				temp[j] = d;
+				temp2[j] = d;
+			}
+			oracle.insert(temp, text[i]);
+			tree.insert(temp2, text[i]);
+		}
+		
+		double[] low = {10.0, 30.0, 30.0};
+		double[] high = {40.0, 50.0, 60.0};
+		Double[] low2 = {10.0, 30.0, 30.0};
+		Double[] high2 = {40.0, 50.0, 60.0};
+		
+		Object[] oraceWithinRange = oracle.range(low, high);
+		Set<String> testtreeWithinRange = tree.range(low2,high2);
+		
+		assertEquals(oraceWithinRange.length, testtreeWithinRange.size());
+		for(int i = 0; i < oraceWithinRange.length; ++i){
+			assertTrue(testtreeWithinRange.contains(oraceWithinRange[i]));
+		}
+	
+		
+	}
+	
 }
 
 
