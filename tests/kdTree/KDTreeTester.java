@@ -310,7 +310,7 @@ public class KDTreeTester {
 	}
 	
 	@Test
-	public void testRangeSearch(){
+	public void testRangeSearch40to60(){
 		KDTree<String> KDtree = buildTestTree();
 		Integer[] low = {40, 40, 40};
 		Integer[] high = {60, 60, 60};
@@ -319,5 +319,19 @@ public class KDTreeTester {
 		assertTrue(withinRange.contains("E"));
 	}
 	
+	@Test
+	public void testRangeSearch2(){
+		KDTree<String> KDtree = buildTestTree();
+		Integer[] low = {40, 40, 10};
+		Integer[] high = {80, 60, 40};
+		Set<String> withinRange = KDtree.range(low, high);
+		assertEquals(withinRange.size(),2);
+		assertTrue(withinRange.contains("A"));
+		assertTrue(withinRange.contains("D"));
+	}
 	
 }
+
+
+
+
