@@ -427,14 +427,13 @@ public class KDTreeTester {
 			tree.insert(temp2, text[i]);
 		}
 		
-		double[] low = {10.0, 30.0, 30.0};
-		double[] high = {40.0, 50.0, 60.0};
-		Double[] low2 = {10.0, 30.0, 30.0};
-		Double[] high2 = {40.0, 50.0, 60.0};
+		double[] low = {10.0, 10.0, 10.0};
+		double[] high = {60.0, 60.0, 60.0};
+		Double[] low2 = {10.0, 10.0, 10.0};
+		Double[] high2 = {60.0, 60.0, 60.0};
 		
 		Object[] oraceWithinRange = oracle.range(low, high);
 		Set<String> testtreeWithinRange = tree.range(low2,high2);
-		
 		assertEquals(oraceWithinRange.length, testtreeWithinRange.size());
 		for(int i = 0; i < oraceWithinRange.length; ++i){
 			assertTrue(testtreeWithinRange.contains(oraceWithinRange[i]));
