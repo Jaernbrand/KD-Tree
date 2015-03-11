@@ -300,6 +300,26 @@ public class KDTree<T> {
 		}
 	} // insert
 	
+	/**
+	 * Checks that all keys in the base array is less than or equal to the
+	 * corresponding key in the other array.
+	 *  
+	 * @param base
+	 * - the array that is the base for the comparison.
+	 * @param other
+	 * - the array to compare the base array with. 
+	 * @return
+	 * - true if all keys in base is less than or equals to the corresponding
+	 * key in other
+	 */
+	private boolean isNotLarger(Comparable[] base, Comparable[] other){
+		for (int i=0; i < DIMENSIONS; ++i){
+			if (base[i].compareTo( other[i] ) <= 0){
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	/**
 	 * Retrieves all the values that are within the given range. 
@@ -327,6 +347,9 @@ public class KDTree<T> {
 		}
 		if(lowest.length != DIMENSIONS || highest.length != DIMENSIONS){
 			throw new IllegalArgumentException("The input arrays must have as many elements as there are dimensions.");
+		}
+		if ( isNotLarger(lowest, highest) ){
+			throw new IllegalArgumentException("The keys in highest can't be less than lowest.");
 		}
 		if(root == null){
 			return new HashSet<T>();

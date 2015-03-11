@@ -233,6 +233,14 @@ public class KDTreeTester {
 		return tmpArray;
 	}
 	
+	private Integer[] constructRndIntegerArray(Random rnd, Integer[] floor, int ceiling, int size){
+		Integer[] tmpArray = new Integer[size];
+		for (int j=0; j < tmpArray.length; ++j){
+			tmpArray[j] = floor[j] + rnd.nextInt(ceiling-floor[j]);
+		}
+		return tmpArray;
+	}
+	
 	private boolean isInRange(Comparable[] oracleKey, Comparable[] lowest, Comparable[] highest, int dimensions){
 		for (int i=0; i < dimensions; ++i){
 			if (oracleKey[i].compareTo(lowest[i]) < 0 || oracleKey[i].compareTo(highest[i]) > 0){
@@ -269,7 +277,7 @@ public class KDTreeTester {
 			
 			if (rnd.nextBoolean()){
 				Integer[] lowest = constructRndIntegerArray(rnd, 1000, 3);
-				Integer[] highest = constructRndIntegerArray(rnd, 1000, 3);
+				Integer[] highest = constructRndIntegerArray(rnd, lowest, 1000, 3);
 				Set<Integer> range = tree.range(lowest, highest);
 				
 				assertTrue(range.size() <= tree.size());
@@ -325,7 +333,7 @@ public class KDTreeTester {
 			
 			if (rnd.nextBoolean()){
 				Integer[] lowest = constructRndIntegerArray(rnd, 1000, K);
-				Integer[] highest = constructRndIntegerArray(rnd, 1000, K);
+				Integer[] highest = constructRndIntegerArray(rnd, lowest, 1000, K);
 				Set<Integer> range = tree.range(lowest, highest);
 				
 				assertTrue(range.size() <= tree.size());
@@ -491,6 +499,16 @@ public class KDTreeTester {
 		}
 	
 	}//testRandomRangeSearchWithExternalLibraryJavaML
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testLargerIsLessThanLower(){
+		KDTree<Integer> biTree = new KDTree<Integer>(2);
+		Integer[] lower = {5, 5};
+		Integer[] larger = {4, 4};
+		Integer[] tmpInput = {4, 5};
+		biTree.insert(tmpInput, 2);
+		biTree.range(lower, larger);
+	}
 	
 }
 
