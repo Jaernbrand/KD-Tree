@@ -44,7 +44,7 @@ public class KDTree<T> {
 	 */
 	public KDTree(int dimensions){
 		if (dimensions < 2){
-			throw new IllegalArgumentException("USE A BINARY TREE! BITCH!");
+			throw new IllegalArgumentException("Less than two dimensions makes this data structure useless.");
 		}
 		
 		DIMENSIONS = dimensions;
@@ -85,9 +85,9 @@ public class KDTree<T> {
 	/**
 	 * Only for testing purposes.
 	 * @return
-	 * The root node obviously.
+	 * The root node.
 	 */
-	public Node<T> getRoot(){
+	Node<T> getRoot(){
 		return root;
 	}
 	
