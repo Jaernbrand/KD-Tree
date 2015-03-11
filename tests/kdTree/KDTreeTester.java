@@ -94,6 +94,19 @@ public class KDTreeTester {
 	}
 	
 	@Test
+	public void testInsertOneElementWithSameKeyInAllIndeges3DTree(){
+		Integer[] keys = {4, 4, 4};
+		triDTree.insert( keys, "A");
+		assertTrue( triDTree.contains(keys) );
+		
+		Set<String> oracle = new HashSet<String>();
+		oracle.add("A");
+		
+		assertEquals(oracle, triDTree.get(keys) );
+		assertEquals( 1, triDTree.size() );
+	}
+	
+	@Test
 	public void testInsertOneElement3DTree(){
 		Integer[] keys = {4, 5, 6};
 		triDTree.insert( keys, "A");
@@ -212,8 +225,8 @@ public class KDTreeTester {
 		return arrList;
 	}
 	
-	private Integer[] constructRndIntegerArray(Random rnd, int ceiling){
-		Integer[] tmpArray = new Integer[3];
+	private Integer[] constructRndIntegerArray(Random rnd, int ceiling, int size){
+		Integer[] tmpArray = new Integer[size];
 		for (int j=0; j < tmpArray.length; ++j){
 			tmpArray[j] = rnd.nextInt(ceiling);
 		}
@@ -237,7 +250,7 @@ public class KDTreeTester {
 		Map<ArrayList<Integer>, Set<Integer>> oracle = new HashMap<ArrayList<Integer>, Set<Integer>>();
 		
 		for (int i=0; i < 1000; ++i){
-			Integer[] tmpArray = constructRndIntegerArray(rnd, 1000);
+			Integer[] tmpArray = constructRndIntegerArray(rnd, 1000, 3);
 			
 			Integer newValue = rnd.nextInt(2000);
 			tree.insert( tmpArray, newValue);
@@ -255,8 +268,8 @@ public class KDTreeTester {
 			}*/
 			
 			if (rnd.nextBoolean()){
-				Integer[] lowest = constructRndIntegerArray(rnd, 1000);
-				Integer[] highest = constructRndIntegerArray(rnd, 1000);
+				Integer[] lowest = constructRndIntegerArray(rnd, 1000, 3);
+				Integer[] highest = constructRndIntegerArray(rnd, 1000, 3);
 				Set<Integer> range = tree.range(lowest, highest);
 				
 				assertTrue(range.size() <= tree.size());
@@ -284,6 +297,61 @@ public class KDTreeTester {
 		}
 	} // testMultipleRandomOperations
 	
+	
+	@Test
+	public void testMultipleRandomOperations5DTree(){
+		Random rnd = new Random();
+		int K = 5;
+		KDTree<Integer> tree = new KDTree<Integer>(K);
+		Map<ArrayList<Integer>, Set<Integer>> oracle = new HashMap<ArrayList<Integer>, Set<Integer>>();
+		
+		for (int i=0; i < 5000; ++i){
+			Integer[] tmpArray = constructRndIntegerArray(rnd, 1000, K);
+			
+			Integer newValue = rnd.nextInt(2000);
+			tree.insert( tmpArray, newValue);
+			
+			Set<Integer> values = oracle.get(convertArrayToArrayList(tmpArray));
+			if (values == null){
+				values = new HashSet<Integer>();
+			}
+			values.add(newValue);
+			
+			oracle.put(convertArrayToArrayList(tmpArray), values);
+			/*
+			while (tree.size() > 0 && rnd.nextBoolean() ){
+				tree.remove(); // remove random element
+			}*/
+			
+			if (rnd.nextBoolean()){
+				Integer[] lowest = constructRndIntegerArray(rnd, 1000, K);
+				Integer[] highest = constructRndIntegerArray(rnd, 1000, K);
+				Set<Integer> range = tree.range(lowest, highest);
+				
+				assertTrue(range.size() <= tree.size());
+				for (ArrayList<Integer> li : oracle.keySet()){
+					Comparable[] oracleKey = new Comparable[K];
+					li.toArray(oracleKey);
+					if ( isInRange(oracleKey, lowest, highest, K) ){
+						Set<Integer> vv = oracle.get(li);
+						for (Integer v : vv)
+							assertTrue(range.contains( v ));
+					}
+				}
+				
+			}
+		} // for-loop
+		
+		assertTrue( oracle.keySet().size() <= tree.size() );
+		
+		for (ArrayList<Integer> li : oracle.keySet() ){
+			Comparable[] currKey = new Comparable[K];
+			li.toArray(currKey);
+			assertTrue( tree.contains( currKey ) );
+			
+			assertEquals(oracle.get(li), tree.get(currKey) );
+		}
+	} // testMultipleRandomOperations
 	
 	private KDTree<String> buildTestTree(){
 		KDTree<String> tree = new KDTree<String>(3);
