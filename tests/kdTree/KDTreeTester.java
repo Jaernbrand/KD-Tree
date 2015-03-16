@@ -175,7 +175,7 @@ public class KDTreeTester {
 		ArrayList<Set<Integer>> oracleValueList = new ArrayList<Set<Integer>>();
 		
 		Integer[] tmpArray = new Integer[3];
-		for (int i=0; i < 2; ++i){
+		for (int i=0; i < 200; ++i){
 			for (int j=0; j < tmpArray.length; ++j){
 				tmpArray[j] = rnd.nextInt(1000);
 			}
