@@ -118,9 +118,8 @@ public class KDTree<T> {
 		int currDimension = 0;
 		
 		Node<T> currNode = root;
-		boolean foundKeys = false;
 		
-		while( currNode != null && !foundKeys){
+		while( currNode != null ){
 			Comparable currKey = currNode.getKey(currDimension);
 			
 			// The search key is less than current node's key.
