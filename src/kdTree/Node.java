@@ -4,9 +4,7 @@ import java.util.Arrays;
 
 /**
  * @author Henrik Järnbrand 
- * henrikjarnbrand@gmail.com
  * @author Tomas Sandberg 
- * tomassandberg86@hotmail.com
  * 
  * 
  * Node is used as nodes in the KDTree.
