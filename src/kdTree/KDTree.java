@@ -23,9 +23,7 @@ import java.util.Stack;
  * - the type of the values in the kd-tree.
  * 
  * @author Henrik Järnbrand 
- * henrikjarnbrand@gmail.com
- * @author Tomas Sandberg 
- * tomassandberg86@hotmail.com
+ * @author Tomas Sandberg
  */
 public class KDTree<T> {
 	
